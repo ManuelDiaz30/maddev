@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Contato | MadDev Studio</title>
+        <title>Contato | MadDevEngineer</title>
         <link rel="stylesheet" href="style.css">
     </head>
     <body>
@@ -16,26 +16,28 @@
                     <input type="hidden" name="_subject" value="Nova mensagem pelo portfólio">
                     <input type="hidden" name="_captcha" value="false">
                     <input type="hidden" name="_template" value="table">
-                    <div class="contact-form__row">
-                        <div class="field">
-                            <label for="nome">Nome</label>
-                            <input id="nome" name="nome" type="text" placeholder="Seu nome" value="" required>
-                        </div>
+                    <div class="field field--full">
+                        <label for="nome">Nome</label>
+                        <input id="nome" name="nome" type="text" placeholder="Seu nome" value="" required pattern="[A-Za-zÀ-ÿ\s]+" title="Digite apenas letras e espaços">
+                        <span class="field-error" id="nome-error"></span>
+                    </div>
 
-                        <div class="field">
-                            <label for="telefone">Telefone</label>
-                            <input id="telefone" name="telefone" type="tel" placeholder="(11) 99999-9999" value="" required>
-                        </div>
+                    <div class="field field--full">
+                        <label for="telefone">Telefone</label>
+                        <input id="telefone" name="telefone" type="tel" placeholder="(11) 99999-9999" value="" required pattern="[0-9()\s-]{8,15}" inputmode="numeric" title="Digite apenas números, espaços, parênteses ou hífen">
+                        <span class="field-error" id="telefone-error"></span>
                     </div>
 
                     <div class="field field--full">
                         <label for="email">Email</label>
                         <input id="email" name="email" type="email" placeholder="seuemail@exemplo.com" required>
+                        <span class="field-error" id="email-error"></span>
                     </div>
 
                     <div class="field field--full">
                         <label for="motivo">Motivo do contato</label>
                         <textarea id="motivo" name="motivo" rows="5" placeholder="Conte-me mais sobre o que você precisa" required></textarea>
+                        <span class="field-error" id="motivo-error"></span>
                     </div>
 
                     <button type="submit">Enviar mensagem</button>
@@ -46,5 +48,80 @@
                 </div>
             </section>
         </main>
+
+        <script>
+            const form = document.querySelector('.contact-form');
+            const nameInput = document.getElementById('nome');
+            const phoneInput = document.getElementById('telefone');
+            const emailInput = document.getElementById('email');
+            const messageInput = document.getElementById('motivo');
+
+            const nameRegex = /^[A-Za-zÀ-ÿ\s]+$/;
+            const phoneRegex = /^[0-9()\s-]{8,15}$/;
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            const errorElements = {
+                nome: document.getElementById('nome-error'),
+                telefone: document.getElementById('telefone-error'),
+                email: document.getElementById('email-error'),
+                motivo: document.getElementById('motivo-error')
+            };
+
+            function validateField(input, regex, message, errorElement) {
+                const value = input.value.trim();
+
+                if (!value || !regex.test(value)) {
+                    input.setCustomValidity(message);
+                    errorElement.textContent = message;
+                    return false;
+                }
+
+                input.setCustomValidity('');
+                errorElement.textContent = '';
+                return true;
+            }
+
+            function validateName() {
+                return validateField(nameInput, nameRegex, 'Digite apenas letras e espaços.', errorElements.nome);
+            }
+
+            function validatePhone() {
+                return validateField(phoneInput, phoneRegex, 'Digite apenas números, espaços, parênteses ou hífen.', errorElements.telefone);
+            }
+
+            function validateEmail() {
+                return validateField(emailInput, emailRegex, 'Digite um endereço de e-mail válido.', errorElements.email);
+            }
+
+            function validateMessage() {
+                const value = messageInput.value.trim();
+                if (!value) {
+                    messageInput.setCustomValidity('Escreva uma mensagem.');
+                    errorElements.motivo.textContent = 'Escreva uma mensagem.';
+                    return false;
+                }
+
+                messageInput.setCustomValidity('');
+                errorElements.motivo.textContent = '';
+                return true;
+            }
+
+            nameInput.addEventListener('input', validateName);
+            phoneInput.addEventListener('input', validatePhone);
+            emailInput.addEventListener('input', validateEmail);
+            messageInput.addEventListener('input', validateMessage);
+
+            form.addEventListener('submit', (event) => {
+                const nameOk = validateName();
+                const phoneOk = validatePhone();
+                const emailOk = validateEmail();
+                const messageOk = validateMessage();
+
+                if (!nameOk || !phoneOk || !emailOk || !messageOk) {
+                    event.preventDefault();
+                    form.reportValidity();
+                }
+            });
+        </script>
     </body>
 </html>

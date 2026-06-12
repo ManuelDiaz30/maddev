@@ -3,16 +3,18 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Desenvolvedor MadDev</title>
+        <title>MadDevEngineer</title>
         <link rel="stylesheet" href="style.css">
 
     </head>
     <body>
+        <div id="bg-anim" aria-hidden="true"></div>
+
         <header class="hero">
             <div class="hero__content">
-                <p class="eyebrow">MadDev Studio</p>
+                <p class="eyebrow">MadDevEngineer</p>
                 <h1>Desenvolvimento web com visual profissional</h1>
-                <p>Olá, meu nome é Manuel e sou desenvolvedor júnior. Este é meu portfólio com foco em sites modernos para empresas e pessoas.</p>
+                <p>Sou desenvolvedor júnior e este é meu portfólio com foco em sites modernos para empresas e pessoas.</p>
                 
             </div>
 
@@ -25,7 +27,7 @@
         <main>
             <section id="sobre" class="panel">
                 <h2>Sobre mim</h2>
-                <p>Olá, meu nome é Manuel e atuo como desenvolvedor júnior. Atualmente sou estudante de Ciência da Computação e criei este site com o objetivo de aprimorar minhas habilidades técnicas e apresentar meu portfólio a quem tiver interesse em conhecer meu trabalho.</p>
+                <p>Sou desenvolvedor júnior e estudante de Ciência da Computação. Criei este site para aprimorar minhas habilidades técnicas e apresentar meu trabalho a quem tiver interesse em conhecer minha atuação.</p>
             </section>
 
             <section id="servicos" class="panel">
@@ -50,7 +52,6 @@
                 <select id="tipo-servico" name="tipo-servico">
                     <option>Site institucional</option>
                     <option>Landing page</option>
-                    <option>Portfólio</option>
                     <option>Manutenção</option>
                 </select>
             </section>
@@ -77,11 +78,176 @@
             </section>
         </main>
 
+        <div class="chat-widget" id="chat-widget">
+            <button class="chat-toggle" id="chat-toggle" type="button" aria-expanded="false">✦</button>
+
+            <div class="chat-panel-widget" id="chat-panel-widget">
+                <div class="chat-header">
+                    <h3>Assistente rápido</h3>
+                    <button class="chat-close" id="chat-close" type="button" aria-label="Fechar assistente">×</button>
+                </div>
+                <p>Pergunte algo sobre serviços, contato ou como posso ajudar.</p>
+
+                <div class="chat-box" id="chat-box" aria-live="polite"></div>
+
+                <div class="chat-input-row">
+                    <input id="chat-input" type="text" placeholder="Digite sua pergunta..." />
+                    <button id="chat-send" type="button">Enviar</button>
+                </div>
+            </div>
+        </div>
+
         <footer class="footer">
-            <p>© 2026 Manuel</p>
+            <p>© 2026 MadDevEngineer</p>
         </footer>
 
+        <script>
+            const bgLayer = document.getElementById('bg-anim');
+            const palettes = [
+                ['#0f172a', '#38bdf8', '#f472b6'],
+                ['#111827', '#22c55e', '#f59e0b'],
+                ['#1e1b4b', '#818cf8', '#2dd4bf'],
+                ['#0f172a', '#fb7185', '#a78bfa'],
+                ['#111827', '#60a5fa', '#34d399']
+            ];
 
+            function createRandomBackground() {
+                const width = 1600;
+                const height = 900;
+                const [colorA, colorB, colorC] = palettes[Math.floor(Math.random() * palettes.length)];
+                const shapes = [];
+                const count = 6 + Math.floor(Math.random() * 5);
+
+                for (let i = 0; i < count; i += 1) {
+                    const type = Math.random() > 0.5 ? 'circle' : 'rect';
+                    const x = Math.random() * width;
+                    const y = Math.random() * height;
+                    const size = 120 + Math.random() * 260;
+                    const opacity = 0.2 + Math.random() * 0.35;
+                    const color = [colorA, colorB, colorC][Math.floor(Math.random() * 3)];
+
+                    if (type === 'circle') {
+                        shapes.push(`<circle cx="${x}" cy="${y}" r="${size / 2}" fill="${color}" opacity="${opacity}" filter="blur(24px)" />`);
+                    } else {
+                        shapes.push(`<rect x="${x}" y="${y}" width="${size}" height="${size * 0.7}" rx="28" fill="${color}" opacity="${opacity}" transform="rotate(${Math.random() * 360} ${x + size / 2} ${y + size * 0.35})" filter="blur(20px)" />`);
+                    }
+                }
+
+                const svg = `
+                    <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
+                        <defs>
+                            <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="${colorA}" />
+                                <stop offset="50%" stop-color="${colorB}" />
+                                <stop offset="100%" stop-color="${colorC}" />
+                            </linearGradient>
+                        </defs>
+                        <rect width="${width}" height="${height}" fill="url(#bgGradient)" />
+                        ${shapes.join('')}
+                    </svg>
+                `;
+
+                bgLayer.style.backgroundImage = `url("data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}")`;
+            }
+
+            createRandomBackground();
+            setInterval(createRandomBackground, 7000);
+
+            const chatWidget = document.getElementById('chat-widget');
+            const chatToggle = document.getElementById('chat-toggle');
+            const chatPanel = document.getElementById('chat-panel-widget');
+            const chatClose = document.getElementById('chat-close');
+            const chatBox = document.getElementById('chat-box');
+            const chatInput = document.getElementById('chat-input');
+            const chatSend = document.getElementById('chat-send');
+
+            const responses = [
+                {
+                    keywords: ['serviço', 'servicos', 'ajuda', 'oque voce faz', 'trabalho'],
+                    reply: 'Eu crio sites modernos, landing pages e soluções para presença online profissional.'
+                },
+                {
+                    keywords: ['contato', 'falar', 'email', 'entre em contato'],
+                    reply: 'Você pode entrar em contato pelo formulário desta página.'
+                },
+                {
+                    keywords: ['preço', 'valor', 'custo', 'quanto custa'],
+                    reply: 'Os valores variam conforme o projeto. Entre em contato para montarmos uma proposta ideal.'
+                },
+                {
+                    keywords: ['landing', 'landing page', 'site institucional'],
+                    reply: 'Posso criar landing pages e sites institucionais com visual profissional e foco em conversão.'
+                },
+                {
+                    keywords: ['olá', 'ola', 'oi', 'eai', 'tudo bom', 'bom dia', 'boa tarde', 'boa noite', 'hello'],
+                    reply: 'Olá! Tudo bem? No que posso ajudar hoje?'
+                }
+            ];
+
+            function addMessage(text, type) {
+                const message = document.createElement('div');
+                message.className = `chat-message chat-message--${type}`;
+                message.textContent = text;
+                chatBox.appendChild(message);
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }
+
+            function normalizeText(text) {
+                return text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+            }
+
+            function getReply(question) {
+                const normalizedQuestion = normalizeText(question);
+                const match = responses.find((item) => item.keywords.some((keyword) => normalizedQuestion.includes(normalizeText(keyword))));
+                return match ? match.reply : 'Posso ajudar com sites, landing pages e contato. Se quiser, envie sua dúvida ou use o formulário.';
+            }
+
+            function sendMessage() {
+                const question = chatInput.value.trim();
+                if (!question) return;
+
+                addMessage(question, 'user');
+                chatInput.value = '';
+
+                setTimeout(() => {
+                    addMessage(getReply(question), 'bot');
+                }, 500);
+            }
+
+            function openChat() {
+                chatWidget.classList.add('is-open');
+                chatToggle.setAttribute('aria-expanded', 'true');
+                setTimeout(() => chatInput.focus(), 100);
+            }
+
+            function closeChat() {
+                chatWidget.classList.remove('is-open');
+                chatToggle.setAttribute('aria-expanded', 'false');
+            }
+
+            chatToggle.addEventListener('click', () => {
+                if (chatWidget.classList.contains('is-open')) {
+                    closeChat();
+                } else {
+                    openChat();
+                }
+            });
+
+            chatClose.addEventListener('click', closeChat);
+            chatSend.addEventListener('click', () => {
+                sendMessage();
+                openChat();
+            });
+            chatInput.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    sendMessage();
+                    openChat();
+                }
+            });
+
+            addMessage('Olá! Sou o assistente do site. Pergunte-me o que quiser.', 'bot');
+        </script>
     </body>
 
 </html>

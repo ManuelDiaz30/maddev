@@ -5,13 +5,30 @@
 body {
     margin: 0;
     font-family: Arial, Helvetica, sans-serif;
-    background-color: #0f172a;
-    background-image: linear-gradient(rgba(15, 23, 42, 0.72), rgba(15, 23, 42, 0.72)), url("img/fundo.svg");
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
+    background-color: #020617;
     color: #e2e8f0;
     line-height: 1.6;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(rgba(2, 6, 23, 0.72), rgba(2, 6, 23, 0.72));
+    z-index: -1;
+    pointer-events: none;
+}
+
+#bg-anim {
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    background-size: cover;
+    background-position: center;
+    transition: background-image 0.8s ease;
 }
 
 main {
@@ -174,12 +191,6 @@ textarea {
     margin-top: 12px;
 }
 
-.contact-form__row {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
-}
-
 .field {
     display: grid;
     gap: 6px;
@@ -187,6 +198,12 @@ textarea {
 
 .field--full {
     grid-column: 1 / -1;
+}
+
+.field-error {
+    min-height: 18px;
+    font-size: 0.9rem;
+    color: #fda4af;
 }
 
 .contact-form button {
@@ -251,6 +268,112 @@ a {
 
 a:hover {
     text-decoration: underline;
+}
+
+.chat-widget {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    z-index: 1000;
+}
+
+.chat-toggle {
+    width: 56px;
+    height: 56px;
+    border: 0;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #38bdf8, #2563eb);
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+}
+
+.chat-panel-widget {
+    display: none;
+    width: min(360px, calc(100vw - 24px));
+    padding: 14px;
+    border-radius: 20px;
+    background: rgba(15, 23, 42, 0.96);
+    border: 1px solid rgba(125, 211, 252, 0.2);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+    margin-bottom: 12px;
+}
+
+.chat-widget.is-open .chat-panel-widget {
+    display: block;
+}
+
+.chat-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.chat-header h3 {
+    margin: 0;
+    color: #f8fafc;
+}
+
+.chat-close {
+    border: 0;
+    background: transparent;
+    color: #e2e8f0;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.chat-box {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-height: 220px;
+    max-height: 320px;
+    overflow-y: auto;
+    padding: 12px;
+    border-radius: 14px;
+    background: rgba(2, 6, 23, 0.6);
+    border: 1px solid rgba(125, 211, 252, 0.16);
+    margin: 10px 0;
+}
+
+.chat-message {
+    max-width: 85%;
+    padding: 10px 12px;
+    border-radius: 12px;
+    line-height: 1.5;
+}
+
+.chat-message--bot {
+    background: rgba(56, 189, 248, 0.16);
+    color: #e0f2fe;
+    align-self: flex-start;
+}
+
+.chat-message--user {
+    background: rgba(34, 197, 94, 0.18);
+    color: #dcfce7;
+    align-self: flex-end;
+}
+
+.chat-input-row {
+    display: flex;
+    gap: 10px;
+}
+
+.chat-input-row input {
+    flex: 1;
+}
+
+.chat-input-row button {
+    padding: 11px 16px;
+    border: 0;
+    border-radius: 999px;
+    background: #38bdf8;
+    color: #081120;
+    font-weight: 700;
+    cursor: pointer;
 }
 
 .footer {
